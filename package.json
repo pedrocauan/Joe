@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "puppeteer": "^21.4.1"
+  },
+  "name": "joe",
+  "description": "\"#JOE\"",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
