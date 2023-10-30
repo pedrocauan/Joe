@@ -9,13 +9,15 @@ const userPass = "kkk12";
 //Elemento html que representa os campos de login e senha no site
 const inputLogin = `input.rounded-input.blue-active.username`;
 const inputPassword = `input[name="credentials_password"]`;
+const inputButton = `.rounded-button.blue.plain.submit-form.g-recaptcha.default-prevent`;
 
 
-//gera uma espera de tempo aleatório entre 3 e 5 segundos
+//gera uma espera de tempo aleatório 
 const timer = (min, max)  => Math.floor(Math.random() * (max - min + 1)) + min;
-console.log(timer(3000, 5000));
-//verifica se o login foi feito com sucesso 
-validateLogin = async (stalker) => {
+
+
+//loga na conta
+login = async (stalker) => {
     //tempo de espera para a pagina carregar
     await stalker.waitForTimeout(timer(3000, 5000));
     try {
@@ -23,9 +25,16 @@ validateLogin = async (stalker) => {
         const login = await stalker.$(inputLogin);
         login.type(userLogin);
 
+        await stalker.waitForTimeout(1500, 2500);
+
         //Inserindo senha
         const password = await stalker.$(inputPassword);
         password.type(userPass);
+
+        await stalker.waitForTimeout(100, 500);
+        //clica no botao de logar
+        stalker.click(inputButton);
+
     }
 
     catch(e) {
@@ -33,12 +42,17 @@ validateLogin = async (stalker) => {
         gotoHotel(stalker);
     }
 }
+//Loga no hotel
+enterHotel = async (stalker) => {
+
+}
 
 //entra no hotel com a conta
 gotoHotel = async (stalker) => {
     stalker.goto(url);
     stalker.setViewport({width: 1200, height: 720});
-    validateLogin(stalker);
+    login(stalker);
+    enterHotel(stalker);
 }
 
 
