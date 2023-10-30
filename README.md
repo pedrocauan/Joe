@@ -6,3 +6,4 @@
 1. [X] - Logar na conta
 1. [X] - Entrar no hotel
     1. [X] - Fechar as propagandas
+1 [X] - Seguir o player

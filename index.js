@@ -13,9 +13,14 @@ const inputLogin = `input.rounded-input.blue-active.username`;
 const inputPassword = `input[name="credentials_password"]`;
 const inputButton = `.rounded-button.blue.plain.submit-form.g-recaptcha.default-prevent`;
 
+//onde o personagem fala no chat
+const talkBar = `input[name="chat"]`;
+
 //Propagandas ao entrar no hotel
 const ad1 = `#closeAd1`;
 const ad2 = `#closeAd2`;
+
+let player = `nible.`;
 
 
 //gera uma espera de tempo aleatório 
@@ -46,15 +51,15 @@ login = async (stalker) => {
 
     catch(e) {
         //Se ele não encontrar o lugar no site que faz login ele entra denovo no hotel
-        gotoHotel(stalker);
+        await gotoHotel(stalker);
     }
 }
 
 //fecha os anuncios
 closeAd = async(stalker) => {
-    await stalker.waitForTimeout(200, 500)
+    await stalker.waitForSelector(ad1); 
     await stalker.click(ad1);
-    await stalker.waitForTimeout(200, 500)
+    await stalker.waitForSelector(ad2);
     await stalker.click(ad2);
 } 
 
@@ -65,12 +70,22 @@ enterHotel = async (stalker) => {
     await closeAd(stalker);
 }
 
+followPlayer =  async (stalker) => {
+    await stalker.waitForSelector(talkBar);
+    const talk = await stalker.$(talkBar);
+    await stalker.waitForTimeout(500, 700);
+    await talk.type(`:follow ${player}\r`);
+
+}
+
 //entra no hotel com a conta
 gotoHotel = async (stalker) => {
     stalker.goto(url);
     stalker.setViewport({width: 1200, height: 720});
-    await login(stalker);
+    const wordBallon = await login(stalker);
+    console.log(typeof wordBallon)
     await enterHotel(stalker);
+    await followPlayer(stalker);
 }
 
 
@@ -78,9 +93,18 @@ gotoHotel = async (stalker) => {
 
 //Cria o bot que vai entrar no hotel
 createStalker = async () => {
-    const spider = await puppeteer.launch({headless: false});
-    const stalker = await spider.newPage();
-    gotoHotel(stalker);
+    try{
+        const spider = await puppeteer.launch({headless: false});
+        const stalker = await spider.newPage();
+        gotoHotel(stalker);
+    }
+    catch(e) {
+       try{
+            createStalker();
+        } catch(e) {
+            createStalker();
+        }
+    }
 }
 
 createStalker();
