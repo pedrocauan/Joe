@@ -2,6 +2,8 @@
 const puppeteer = require("puppeteer");
 //url do habbo hotel 
 const url = `https://www.habblet.city`;
+// url para entrar no hotel depois de logado na conta
+const loginUrl = `https://www.habblet.city/hotelv2`;
 //usuario e login da conta que vai ser utilizada
 const userLogin = "PersonaCentral";
 const userPass = "kkk12";
@@ -10,6 +12,10 @@ const userPass = "kkk12";
 const inputLogin = `input.rounded-input.blue-active.username`;
 const inputPassword = `input[name="credentials_password"]`;
 const inputButton = `.rounded-button.blue.plain.submit-form.g-recaptcha.default-prevent`;
+
+//Propagandas ao entrar no hotel
+const ad1 = `#closeAd1`;
+const ad2 = `#closeAd2`;
 
 
 //gera uma espera de tempo aleatório 
@@ -34,7 +40,8 @@ login = async (stalker) => {
         await stalker.waitForTimeout(100, 500);
         //clica no botao de logar
         stalker.click(inputButton);
-
+        
+        await stalker.waitForTimeout(2000, 3000);
     }
 
     catch(e) {
@@ -42,17 +49,28 @@ login = async (stalker) => {
         gotoHotel(stalker);
     }
 }
+
+//fecha os anuncios
+closeAd = async(stalker) => {
+    await stalker.waitForTimeout(200, 500)
+    await stalker.click(ad1);
+    await stalker.waitForTimeout(200, 500)
+    await stalker.click(ad2);
+} 
+
 //Loga no hotel
 enterHotel = async (stalker) => {
-
+    await stalker.goto(loginUrl);
+    await stalker.setViewport({width: 1200, height: 720});
+    await closeAd(stalker);
 }
 
 //entra no hotel com a conta
 gotoHotel = async (stalker) => {
     stalker.goto(url);
     stalker.setViewport({width: 1200, height: 720});
-    login(stalker);
-    enterHotel(stalker);
+    await login(stalker);
+    await enterHotel(stalker);
 }
 
 
